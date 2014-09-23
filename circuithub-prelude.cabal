@@ -1,0 +1,64 @@
+name:              circuithub-prelude
+version:           0.0.1
+synopsis:          CircuitHub's Prelude that builds on top of the ClassyPrelude
+description:       This package is mostly intended for CircuitHub's internal development
+                   and is in active development. Therefore the api is not guaranteed to
+                   be stable.
+homepage:          https://github.com/circuithub/circuithub-prelude
+bug-reports:       https://github.com/circuithub/circuithub-prelude/issues
+license:           MIT
+license-file:      LICENSE
+author:            Rehno Lindeque <code@rehno.lindeque.name>
+maintainer:        Rehno Lindeque <code@rehno.lindeque.name>
+copyright:         2014 CircuitHub, Inc.
+cabal-version:     >= 1.10
+build-type:        Simple
+
+flag dev
+    description:   Turn on development settings
+    default:       False
+
+library
+    exposed-modules: CHPrelude
+                     Data.Text.Clean
+                     Data.Text.Sequences
+                     Data.Text.Convert
+                     Data.Maybe.Extra
+                     Data.Tuple.Extra
+                     Data.List.Extra
+                     Data.Either.Extra
+                     Data.HashMap.Extra
+                     Data.Hex.Extra
+                     Data.ByteString.Extra
+                     Data.Time.Extra
+                     Debug.Trace.Extra
+                     Safe.Extra
+
+    if flag(dev)
+        cpp-options:   -DDEVELOPMENT
+        ghc-options:   -Wall -O0 -j
+    else
+        ghc-options:   -Wall -O2
+
+    default-extensions: NoImplicitPrelude
+
+    default-language: Haskell2010
+
+    build-depends: base                          >= 4.7           && < 5
+                 , classy-prelude                >= 0.9.5
+                 , bytestring                    >= 0.10.4.0
+                 , safe                          >= 0.3.8
+                 , containers                    >= 0.5.5.1
+                 , unordered-containers          >= 0.2.5.0
+                 , comparable-key                >= 0.0.1
+                 , hashable                      >= 1.2.2.0
+                 , semigroups                    >= 0.15.2
+                 , text                          >= 1.1.1.3
+                 , bifunctors                    >= 4.1.1.1
+                 , bytestring                    >= 0.10.4.0
+                 , time                          >= 1.4.2
+                 , aeson                         >= 0.7.0.6
+                 , aeson-pretty                  >= 0.7.1
+                 , utf8-string                   >= 0.3.8
+                 , either                        >= 4.3.0.1
+                 , errors                        >= 1.4.7

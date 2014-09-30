@@ -7,6 +7,6 @@ import ClassyPrelude      as CHPrelude hiding ( head, init, last, tail        --
                                               , sequence                      -- Replaced by more general functions
                                               , first, second
                                               )
-import Text.Read          as CHPrelude (Read, lex, readsPrec)
+import Text.Read          as CHPrelude (Read, lex, readsPrec, readEither)
 import Control.Error.Safe as CHPrelude
 import Data.Bifunctor     as CHPrelude

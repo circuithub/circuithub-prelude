@@ -18,6 +18,7 @@ module Data.List.Extra
   , sortAndGroup
   , sortedGroupBy
   , minIndexMay
+  , maxIndexMay
   ) where
 
 import Prelude
@@ -205,3 +206,17 @@ minIndexMay ns  = return . fst $ loop 0 ns
     loop i (x1:x2:xs) = let ix'@(_  , x' ) = if x1 < x2 then (i, x1) else (i + 1, x2)
                             ix''@(_ , x'') = loop (i + 2) xs
                         in if x' < x'' then ix' else ix''
+
+-- | Find the index of the maximum element
+maxIndexMay :: Ord a => [a] -> Maybe Int
+maxIndexMay []  = Nothing
+maxIndexMay [_] = return 0
+maxIndexMay ns  = return . fst $ loop 0 ns
+  where
+    loop _ []                     = error "impossible state reached in maxIndexMay loop"
+    loop i [x]                    = (i    , x)
+    loop i [x1,x2]    | x1 > x2   = (i    , x1)
+                      | otherwise = (i + 1, x2)
+    loop i (x1:x2:xs) = let ix'@(_  , x' ) = if x1 > x2 then (i, x1) else (i + 1, x2)
+                            ix''@(_ , x'') = loop (i + 2) xs
+                        in if x' > x'' then ix' else ix''

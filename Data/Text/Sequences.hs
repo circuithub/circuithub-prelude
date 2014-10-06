@@ -1,6 +1,6 @@
 module Data.Text.Sequences where
 
-import Prelude hiding (splitAt, zip, tail, splitAt, zip, tail)
+import ClassyPrelude hiding (splitAt, zip, tail, splitAt, zip)
 import Data.Text hiding (findIndex)
 import Data.List (findIndex)
 import Data.Maybe (fromMaybe)

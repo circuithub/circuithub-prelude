@@ -1,7 +1,7 @@
 -- TODO: Perhaps Data.Text.Encoding.Extra?
 module Data.Text.Convert where 
 
-import Prelude 
+import ClassyPrelude
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.Encoding as TLE 

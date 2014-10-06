@@ -1,8 +1,7 @@
 module Data.Text.Clean where
 
-import Prelude hiding (take, null, drop, dropWhile, span)
+import ClassyPrelude hiding (take, null, drop, dropWhile, span)
 import Data.Text
-import Data.Bifunctor (second)
 
 dropParens :: Text -> Text
 dropParens t =  let mi = findIndex (== '(') t

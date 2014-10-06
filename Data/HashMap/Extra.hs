@@ -1,6 +1,6 @@
 module Data.HashMap.Extra where
 
-import Prelude 
+import Prelude
 import Data.HashMap.Strict as H
 import Data.Hashable
 import Data.Bifunctor

@@ -1,11 +1,10 @@
 module Debug.Trace.Extra where
 
-import Prelude
+import ClassyPrelude
 import Debug.Trace
 import Data.Aeson.Types (ToJSON)
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.ByteString.UTF8 (toString)
-import Data.ByteString.Lazy (toStrict)
 
 -- Using similar conventions to Debug.Trace.Helpers
 traceIt :: (Show a) => a -> a

@@ -1,6 +1,6 @@
 module Data.Maybe.Extra where
 
-import Prelude
+import ClassyPrelude
 import Data.Maybe
 import Data.Bifunctor
 

@@ -1,6 +1,6 @@
 module Data.ByteString.Extra where
 
-import Prelude
+import ClassyPrelude
 import qualified Data.ByteString as B 
 import qualified Data.ByteString.Lazy as BL
 

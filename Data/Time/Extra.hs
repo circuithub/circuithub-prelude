@@ -1,6 +1,6 @@
 module Data.Time.Extra where
 
-import Prelude
+import ClassyPrelude
 import Data.Time
 import Data.Time.Calendar.WeekDate
 

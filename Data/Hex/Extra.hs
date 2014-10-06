@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Data.Hex.Extra where
 
-import Prelude
-import Data.List
+import ClassyPrelude
+import Text.Read (read)
 import Numeric
 
 showHexFixed :: (Integral a, Show a) => Int -> a -> String

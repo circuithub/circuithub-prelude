@@ -13,8 +13,7 @@ module Data.List.Extra
   , lookupFromNothing
   , lookupFromNothings
   , ordGroupAllOn
-  , sortAndGroup
-  , sortedGroupBy
+  , ordGroupAllByOn
   , minIndexMay
   , maxIndexMay
   ) where
@@ -32,6 +31,7 @@ import qualified Data.HashMap.Strict as HM
 import Data.ComparableKey (OrdByKey (..), OrdKeyed (..))
 import Data.Hashable
 import Data.List
+import Data.Function (on)
 import qualified Data.List.NonEmpty as LN
 
 -- | A faster O(n log n) nub function that works on Ord elements (from https://github.com/nh2/haskell-ordnub#dont-use-nub)
@@ -185,6 +185,10 @@ lookupFromNothings = map . lookupFromNothing
 
 -- | An O(n log n) implementation of 'groupAllOn' that returns an ordinal for each element in order
 -- See https://github.com/snoyberg/mono-traversable/issues/36
+--
+-- >>> ordGroupAllOn id [1,2,3,4,5,4,3,2,1,11,22,11,22,11,22,11] :: [[Int]]
+-- [[1,1],[2,2],[3,3],[4,4],[5],[11,11,11,11],[22,22,22]]
+--
 
 -- ordGroupAllOn :: Eq b => (Element seq -> b) -> seq -> [seq]
 -- ordGroupAllOn f = fmap fromList . groupAllOn f . otoList
@@ -193,21 +197,16 @@ ordGroupAllOn :: Ord b => (a -> b) -> [a] -> [[a]]
 ordGroupAllOn f = let cmp = comparing snd
                   in (map . map) fst . groupBy (((==EQ) .) . cmp) . sortBy cmp . map (\x -> (x, f x))
 
--- | Go from association list [(a,b)] to Map a [b] by sorting & grouping on fst
--- TODO: Remove in favour of ordGroupAllOn ?
-sortAndGroup :: Ord a => [(a, b)] -> M.Map a [b]
-sortAndGroup al = M.fromListWith (++) [(k, [v]) | (k, v) <- al]
-
--- | Group by that works globally across the list, ie groupBy . sort
--- returns grouped elements as Non-empty lists
--- Notice that this is similar to groupAll / groupAllOn in mono-traversable but should be more efficient
--- since a sort can be used (groupAll / groupAllOn only uses the Eq instance)
--- TODO: Remove in favour of ordGroupAllOn ?
-sortedGroupBy :: (a -> a-> Ordering) -> [a] -> [LN.NonEmpty a]
-sortedGroupBy cmp =
-  LN.groupBy equals . sortBy cmp
-  where
-    equals = ((==EQ) . ) . cmp
+-- | Similar to 'ordGroupAllOn', but uses a distance function to do the grouping
+--   See https://github.com/snoyberg/mono-traversable/issues/36
+--
+-- >>> ordGroupAllByOn (\x y -> abs (x - y) < 1.1) (* 0.5) [1,2,3,4,5,4,3,2,1,11,22,11,22,11,22,11] :: [[Double]]
+-- [[1.0,1.0,2.0,2.0,3.0,3.0],[4.0,4.0,5.0],[11.0,11.0,11.0,11.0],[22.0,22.0,22.0]]
+--
+ordGroupAllByOn :: Ord b => (b -> b -> Bool) -> (a -> b) -> [a] -> [[a]]
+ordGroupAllByOn dist f = let cmp = comparing snd
+                             eq  = dist `on` snd
+                         in (map . map) fst . groupBy eq . sortBy cmp . map (\x -> (x, f x))
 
 -- | Find the index of the minimum element
 minIndexMay :: Ord a => [a] -> Maybe Int

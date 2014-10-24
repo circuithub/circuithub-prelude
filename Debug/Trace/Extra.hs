@@ -1,7 +1,6 @@
 module Debug.Trace.Extra where
 
 import ClassyPrelude
-import Debug.Trace
 import Data.Aeson.Types (ToJSON)
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.ByteString.UTF8 (toString)

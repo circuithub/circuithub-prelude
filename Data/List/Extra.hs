@@ -23,8 +23,8 @@ import ClassyPrelude (ordNub)
 import Safe
 import Data.Bifunctor
 import Data.Ord (comparing)
-import qualified Data.Set            as S
-import qualified Data.HashSet        as HS
+-- import qualified Data.Set            as S
+-- import qualified Data.HashSet        as HS
 import qualified Data.IntMap.Strict  as IM
 import qualified Data.Map.Strict     as M
 import qualified Data.HashMap.Strict as HM
@@ -32,7 +32,7 @@ import Data.ComparableKey (OrdByKey (..), OrdKeyed (..))
 import Data.Hashable
 import Data.List
 import Data.Function (on)
-import qualified Data.List.NonEmpty as LN
+-- import qualified Data.List.NonEmpty as LN
 
 -- | A faster O(n log n) nub function that works on Ord elements (from https://github.com/nh2/haskell-ordnub#dont-use-nub)
 --   See also https://groups.google.com/forum/#!topic/haskell-cafe/4UJBbwVEacg

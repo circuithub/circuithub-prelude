@@ -13,6 +13,9 @@ filterFirstJusts = map (fromJust `bimap` id) . (filter $ isJust . fst)
 filterSecondJusts :: [(a, Maybe b)] -> [(a,b)]
 filterSecondJusts = map (id `bimap` fromJust) . (filter $ isJust . snd)
 
+filterBothJusts :: [(Maybe a, Maybe b)] -> [(a,b)]
+filterBothJusts = map (fromJust `bimap` fromJust) . (filter $ \(x,y) -> isJust x && isJust y)
+
 filterFirstNothings :: [(Maybe a, b)] -> [b]
 filterFirstNothings = map snd . (filter $ isNothing . fst)
 

@@ -1,6 +1,7 @@
 module Safe.Extra 
   ( fromLeftNote'
   , fromRightNote'
+  , fromRightPrefix'
   , zipWithExact3Note
   , zipWithExact4Note
   , zipWithExact5Note
@@ -10,17 +11,21 @@ import Prelude
 import Data.Either.Combinators
 import Data.List (zipWith4, zipWith5)
 
-liftNote :: (a -> b) -> (a -> Bool) -> String -> String -> (a -> b)
-liftNote func test caller note val =
+liftNote :: (a -> b) -> (a -> Bool) -> String -> (String -> a -> String) -> String -> (a -> b)
+liftNote func test caller fnNote note val =
   if test val
-  then error $ "Pattern match failure, " ++ caller ++ ", " ++ note
+  then error $ "Pattern match failure, " ++ caller ++ ", " ++ fnNote note val
   else func val
 
 fromLeftNote' :: String -> Either a b -> a
-fromLeftNote' = liftNote fromLeft' isRight "fromLeft Right"
+fromLeftNote' = liftNote fromLeft' isRight "fromLeft Right" const
 
 fromRightNote' :: String -> Either a b -> b
-fromRightNote' = liftNote fromRight' isLeft "fromRight Left"
+fromRightNote' = liftNote fromRight' isLeft "fromRight Left" const
+
+-- | Prefix the Left error with a note
+fromRightPrefix' :: Show e => String -> Either e b -> b
+fromRightPrefix' = liftNote fromRight' isLeft "fromRight" $ \msg (Left e) -> msg ++ ": Left " ++ show e
 
 zipWithExact3Note :: String -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
 zipWithExact3Note note f as bs cs =

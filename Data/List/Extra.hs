@@ -16,6 +16,11 @@ module Data.List.Extra
   , ordGroupAllByOn
   , minIndexMay
   , maxIndexMay
+  , filterFirstJusts
+  , filterSecondJusts
+  , filterBothJusts
+  , filterFirstNothings
+  , filterSecondNothings
   ) where
 
 import Prelude
@@ -31,6 +36,7 @@ import qualified Data.HashMap.Strict as HM
 import Data.ComparableKey (OrdByKey (..), OrdKeyed (..))
 import Data.Hashable
 import Data.List
+import Data.Maybe
 import Data.Function (on)
 -- import qualified Data.List.NonEmpty as LN
 
@@ -238,3 +244,20 @@ maxIndexMay ns  = return . fst $ loop 0 ns
     loop i (x1:x2:xs) = let ix'@(_  , x' ) = if x1 > x2 then (i, x1) else (i + 1, x2)
                             ix''@(_ , x'') = loop (i + 2) xs
                         in if x' > x'' then ix' else ix''
+
+-- * Filters on lists of pairs
+
+filterFirstJusts :: [(Maybe a, b)] -> [(a,b)]
+filterFirstJusts = map (fromJust `bimap` id) . (filter $ isJust . fst)
+
+filterSecondJusts :: [(a, Maybe b)] -> [(a,b)]
+filterSecondJusts = map (id `bimap` fromJust) . (filter $ isJust . snd)
+
+filterBothJusts :: [(Maybe a, Maybe b)] -> [(a,b)]
+filterBothJusts = map (fromJust `bimap` fromJust) . (filter $ \(x,y) -> isJust x && isJust y)
+
+filterFirstNothings :: [(Maybe a, b)] -> [b]
+filterFirstNothings = map snd . (filter $ isNothing . fst)
+
+filterSecondNothings :: [(a, Maybe b)] -> [a]
+filterSecondNothings = map fst . (filter $ isNothing . snd)

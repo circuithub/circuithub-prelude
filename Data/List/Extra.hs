@@ -1,6 +1,7 @@
 {-# LANGUAGE BangPatterns #-}
 module Data.List.Extra 
   ( keyNub
+  , ordNubOn
   , ordNubIndex
   , ordNubIndexBy
   , nubIndexHash
@@ -24,7 +25,7 @@ module Data.List.Extra
   ) where
 
 import Prelude
-import ClassyPrelude (ordNub)
+import ClassyPrelude (ordNub, ordNubBy)
 import Safe
 import Data.Bifunctor
 import Data.Ord (comparing)
@@ -64,6 +65,11 @@ import Data.Function (on)
 -- | Removes duplicate elements from a list using key equality. Only the first occurrence of each element is retained.
 keyNub :: OrdByKey a => [a] -> [a]
 keyNub = map (\(OrdKeyed x) -> x) . ordNub . map OrdKeyed
+
+-- | Simpler version of nubOrdBy that uses the default overloaded == operation
+--   TODO: Optimize (f is called too many times)
+ordNubOn :: (Eq b, Ord b) => (a -> b) -> [a] -> [a]
+ordNubOn f = ordNubBy f (\x y -> f x == f y)
 
 -- | Another O(n log n) implementation of nub using a hashable instance
 --   TODO: remove in favour of hashNub in classy-prelude?

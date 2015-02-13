@@ -1,5 +1,5 @@
 name:              circuithub-prelude
-version:           0.0.6
+version:           0.0.7
 synopsis:          CircuitHub's Prelude that builds on top of the ClassyPrelude
 description:       This package is mostly intended for CircuitHub's internal development
                    and is in active development. Therefore the api is not guaranteed to
@@ -44,8 +44,8 @@ library
 
     default-language: Haskell2010
 
-    build-depends: base                          >= 4.7           && < 5
-                 , classy-prelude                >= 0.9.5
+    build-depends: base                          >= 4.7.0.2       && < 5
+                 , classy-prelude                >= 0.10.4
                  , bytestring                    >= 0.10.4.0
                  , safe                          >= 0.3.8
                  , containers                    >= 0.5.5.1

@@ -5,17 +5,18 @@ import ClassyPrelude        as CHPrelude hiding ( head                          
                                                 , readFile, writeFile
                                                 , sequence                      -- Replaced by more general functions
                                                 , first, second
+                                                , elem, notElem                 -- Deprecated (replaced by oelem, onotElem)
                                                 )
 import Text.Read            as CHPrelude ( lex
                                          , readsPrec
                                          , readEither
                                          )
 import Data.Bifunctor       as CHPrelude
-import Data.Traversable     as CHPrelude ( traverse
-                                         , sequence
+import Data.Traversable     as CHPrelude ( sequence
                                          )
 import Control.Monad        as CHPrelude ( zipWithM
                                          , msum
                                          , foldM_
                                          )
-import Control.Error.Safe   as CHPrelude
+import Control.Error.Safe   as CHPrelude hiding ( tryJust
+                                                )

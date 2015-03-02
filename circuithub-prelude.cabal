@@ -1,5 +1,5 @@
 name:              circuithub-prelude
-version:           0.0.7
+version:           0.0.8
 synopsis:          CircuitHub's Prelude that builds on top of the ClassyPrelude
 description:       This package is mostly intended for CircuitHub's internal development
                    and is in active development. Therefore the api is not guaranteed to
@@ -20,16 +20,20 @@ flag dev
 
 library
     exposed-modules: CHPrelude
+                     Control.Monad.Extra
                      Data.Text.Clean
                      Data.Text.Sequences
                      Data.Text.Convert
+                     Data.ByteString.Extra
                      Data.Maybe.Extra
                      Data.Tuple.Extra
                      Data.List.Extra
+                     Data.List.Split.Extra
                      Data.Either.Extra
+                     Data.Map.Strict.Extra
                      Data.HashMap.Extra
                      Data.Hex.Extra
-                     Data.ByteString.Extra
+                     Data.Proxy.Extra
                      Data.Time.Extra
                      Debug.Trace.Extra
                      Safe.Extra
@@ -62,3 +66,5 @@ library
                  , utf8-string                   >= 0.3.8
                  , either                        >= 4.3.0.1
                  , errors                        >= 1.4.7
+                 , split                         >= 0.2.2         && < 0.3
+                 , vector                        >= 0.10.9.1      && < 0.11

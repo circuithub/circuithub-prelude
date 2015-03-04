@@ -1,5 +1,5 @@
 name:              circuithub-prelude
-version:           0.0.8
+version:           0.0.9
 synopsis:          CircuitHub's Prelude that builds on top of the ClassyPrelude
 description:       This package is mostly intended for CircuitHub's internal development
                    and is in active development. Therefore the api is not guaranteed to
@@ -21,6 +21,8 @@ flag dev
 library
     exposed-modules: CHPrelude
                      Control.Monad.Extra
+                     Control.Applicative.Extra
+                     Data.Functor.Extra
                      Data.Text.Clean
                      Data.Text.Sequences
                      Data.Text.Convert

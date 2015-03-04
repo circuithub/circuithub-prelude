@@ -1,9 +1,9 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE BangPatterns #-}
 module Control.Applicative.Extra
-  ( broadcastA
-  , broadcastByA
-  , broadcastWhenA
+  ( dispatchA
+  , dispatchByA
+  , dispatchWhenA
   ) where
 
 import Prelude (error)
@@ -33,12 +33,12 @@ assertLengthEq !_note _is os =
   else os
 {-# INLINE assertLengthEq #-}
 
--- | Broadcast elements according to the splits (odd lists are sent to the first function, even lists to the second)
+-- | Dispatch elements according to the splits (odd lists are sent to the first function, even lists to the second)
 --   and gather the results maintaining order
 --
 --   (TODO: create a parallel version of this function)
 --
--- >>> broadcastA [0,2,0,3,4,0,0,1,1,0,2,2]
+-- >>> dispatchA [0,2,0,3,4,0,0,1,1,0,2,2]
 --                (\xs -> print xs >> return (map (+ 0.1) xs))
 --                (\xs -> print xs >> return (map (+ 0.9) xs))
 --                [ 19,29 , 39,49,59 , 11,21,31,41 , 69 , 51 , 61,71 , 79,89 ]
@@ -52,18 +52,18 @@ assertLengthEq !_note _is os =
 -- >>> foldr zipChunks ([],[]) $ chunksOf 2 $ [[],[19,29],[],[39,49,59],[11,21,31,41],[],[],[69],[51],[],[61,71],[79,89]]
 -- ( [[],[],[11,21,31,41],[],[51],[61,71]] , [[19,29],[39,49,59],[],[69],[],[79,89]] )
 --
-broadcastA :: Applicative m => [Int] -> ([a] -> m [b]) -> ([a] -> m [b]) -> [a] -> m [b]
-broadcastA seqs f g xs =
-  let seqss     = fromRightPrefix' "broadcastA" $ splitPlaces seqs xs
+dispatchA :: Applicative m => [Int] -> ([a] -> m [b]) -> ([a] -> m [b]) -> [a] -> m [b]
+dispatchA seqs f g xs =
+  let seqss     = fromRightPrefix' "dispatchA" $ splitPlaces seqs xs
       (lxs,rxs) = (concat `bimap` concat) (foldr zipChunks ([],[]) $ chunksOf 2 seqss)
       lxs' = f lxs
       rxs' = g rxs
-  in gather seqs <$> (assertLengthEq "broadcastA/f" lxs <$> lxs') <*> (assertLengthEq "broadcastA/g" rxs <$> rxs')
+  in gather seqs <$> (assertLengthEq "dispatchA/f" lxs <$> lxs') <*> (assertLengthEq "dispatchA/g" rxs <$> rxs')
   where
     zipChunks :: [a] -> ([a], [a]) -> ([a], [a])
     zipChunks (x:[]  ) (ls,rs) = (x:ls, rs)
     zipChunks (x:y:[]) (ls,rs) = (x:ls, y:rs)
-    zipChunks _       _        = error "broadcastA/zipChunks"
+    zipChunks _       _        = error "dispatchA/zipChunks"
 
     gather :: [Int] -> [a] -> [a] -> [a]
     gather []         _  _           = []
@@ -73,23 +73,23 @@ broadcastA seqs f g xs =
           (rs',rs'') = splitAt rseqs rs
       in ls' ++ rs' ++ gather seqs' ls'' rs''
 
--- | Broadcast elements by a bucketing function and gather the results maintaining order
+-- | Dispatch elements by a bucketing function and gather the results maintaining order
 --   In line with the standard ordering of Bool (False < True), elements that evaluate to
 --   False are sent to the first function and those that evaluate to True to the second.
-broadcastByA :: Applicative m => (a -> Bool) -> ([a] -> m [b]) -> ([a] -> m [b]) -> [a] -> m [b]
-broadcastByA bucket f g xs = broadcastA (length `map` collateBy bucket xs) f g xs
+dispatchByA :: Applicative m => (a -> Bool) -> ([a] -> m [b]) -> ([a] -> m [b]) -> [a] -> m [b]
+dispatchByA bucket f g xs = dispatchA (length `map` collateBy bucket xs) f g xs
 
--- | Broadcast elements to a batch function when they meet some condition (return the rest as given)
+-- | Dispatch elements to a batch function when they meet some condition (return the rest as given)
 --
--- >>> broadcastWhenA (> 0) (const Nothing) (\xs -> print xs >> return (map Just xs)) [-1,-4,0,2,3,-4,1,0 :: Int]
+-- >>> dispatchWhenA (> 0) (const Nothing) (\xs -> print xs >> return (map Just xs)) [-1,-4,0,2,3,-4,1,0 :: Int]
 -- OUT: [2,3,1]
 -- [Nothing,Nothing,Nothing,Just 2,Just 3,Nothing,Just 1,Nothing]
 --
-broadcastWhenA :: Applicative m => (a -> Bool) -> (a -> b) -> ([a] -> m [b]) -> [a] -> m [b]
-broadcastWhenA cond def = broadcastByA cond (traverse $ pure . def)
+dispatchWhenA :: Applicative m => (a -> Bool) -> (a -> b) -> ([a] -> m [b]) -> [a] -> m [b]
+dispatchWhenA cond def = dispatchByA cond (traverse $ pure . def)
 
--- | Broadcast elements by lumping elements into several buckets and gather the results maintaining order
+-- | Dispatch elements by lumping elements into several buckets and gather the results maintaining order
 --
--- broadcastGroupsA :: (Enum e, Bounded e, Applicative m) => [(e, Int)] -> [[a] -> m [b]] -> [a] -> m [b]
+-- dispatchGroupsA :: (Enum e, Bounded e, Applicative m) => [(e, Int)] -> [[a] -> m [b]] -> [a] -> m [b]
 --
 

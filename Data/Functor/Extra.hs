@@ -2,8 +2,8 @@
 {-# LANGUAGE BangPatterns #-}
 module Data.Functor.Extra
   ( applyFlattened
-  , broadcastNubBy
-  , broadcastNub
+  , dispatchNubBy
+  , dispatchNub
   ) where
 
 import Prelude (error)
@@ -47,17 +47,17 @@ applyFlattened f xss =
 
 -- | Apply a functorial (or, in many typical use cases, a monadic) function with nub and then un-nub when done
 --
--- >>> broadcastNubBy floor (\xs -> print xs >> return (map (\x -> (floor x, x)) xs)) [0.1, 2.2,-1.2, 0.8, 9.9, 2.5, 3.0, 2.9, 2.1,-1.4]
+-- >>> dispatchNubBy floor (\xs -> print xs >> return (map (\x -> (floor x, x)) xs)) [0.1, 2.2,-1.2, 0.8, 9.9, 2.5, 3.0, 2.9, 2.1,-1.4]
 -- OUT: [0.1,2.2,-1.2,9.9,3.0]
 -- [(0,0.1),(2,2.2),(-2,-1.2),(0,0.1),(9,9.9),(2,2.2),(3,3.0),(2,2.2),(2,2.2),(-2,-1.2)]
 --
-broadcastNubBy :: (Eq i, Ord i, Functor f) => (a -> i) -> ([a] -> f [b]) -> [a] -> f [b]
-broadcastNubBy index f xs = invNub `fmap` f nubXs
+dispatchNubBy :: (Eq i, Ord i, Functor f) => (a -> i) -> ([a] -> f [b]) -> [a] -> f [b]
+dispatchNubBy index f xs = invNub `fmap` f nubXs
   where
     (nubXs, nubIndex) = ordNubIndexBy index xs
-    invNub nubFxs     = let fxs = V.fromList (assertLength "broadcastNubByA" (length nubXs) nubFxs)
+    invNub nubFxs     = let fxs = V.fromList (assertLength "dispatchNubByA" (length nubXs) nubFxs)
                         in  map (\n -> fxs V.! n) nubIndex
 
 -- | Apply a monadic function to nub elements and then replicate results to regain the original shape
-broadcastNub :: (Eq a, Ord a, Functor f) => ([a] -> f [b]) -> [a] -> f [b]
-broadcastNub = broadcastNubBy id
+dispatchNub :: (Eq a, Ord a, Functor f) => ([a] -> f [b]) -> [a] -> f [b]
+dispatchNub = dispatchNubBy id

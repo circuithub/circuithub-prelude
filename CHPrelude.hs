@@ -23,3 +23,5 @@ import Control.Monad        as CHPrelude ( zipWithM
                                          )
 import Control.Error.Safe   as CHPrelude hiding ( tryJust
                                                 )
+import Control.Error.Util   as CHPrelude ( (?:)
+                                         )

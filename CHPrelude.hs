@@ -11,6 +11,8 @@ import ClassyPrelude        as CHPrelude hiding ( head                          
 import Data.Foldable        as CHPrelude ( for_
                                          )
 import Data.Bifunctor       as CHPrelude
+import Data.Bifunctor.Extra as CHPrelude ( mapBoth
+                                         )
 import Data.Traversable     as CHPrelude ( sequence
                                          )
 import Text.Read            as CHPrelude ( lex

@@ -33,6 +33,7 @@ library
                      Data.List.Extra
                      Data.List.Split.Extra
                      Data.Either.Extra
+                     Data.Either.Validation.Extra
                      Data.Map.Strict.Extra
                      Data.HashMap.Extra
                      Data.Hex.Extra

@@ -23,6 +23,8 @@ import Control.Monad        as CHPrelude ( zipWithM
                                          , msum
                                          , foldM_
                                          )
+import Data.Either.Validation.Extra as CHPrelude ( validate
+                                                 )
 import Control.Error.Safe   as CHPrelude hiding ( tryJust
                                                 )
 import Control.Error.Util   as CHPrelude ( (?:)

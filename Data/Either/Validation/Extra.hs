@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 module Data.Either.Validation.Extra
   ( validate
   , intercalateFailure
@@ -12,10 +13,17 @@ module Data.Either.Validation.Extra
 import Data.Bool (Bool)
 import Data.Eq (Eq, (==))
 import Data.Maybe (Maybe, maybe)
+import Data.Either (Either (..))
+import Data.Bifunctor (first)
 import Data.Text (Text, unpack)
 import Data.Monoid (Monoid, mempty)
 import Control.Monad (Monad, fail, return)
 import Data.Either.Validation
+-- import Data.Monoid (Monoid)
+import Data.Sequences (IsSequence)
+import Data.MonoTraversable (Element)
+import ClassyPrelude (intercalate)
+import Data.Function ((.))
 
 -- | Like note from Control.Error.Util except for 'Validation' instead of 'Either'
 --   I.e. tag the 'Nothing' value of a 'Maybe'.
@@ -26,11 +34,12 @@ validate msg = maybe (Failure [msg]) Success
 -- validateT :: Monad m => a -> MaybeT m b -> ValidationT a m b
 
 -- | Reformat a validation failure to produce an Either
-intercalateFailure :: (Monoid (Element txt), IsSequence txt)
-                    => Element txt
-                    -> Validation txt a
-                    -> Either (Element txt) a
-intercalateFailure = left intercalate . validationToEither
+--   The errors are concatenated by intercalating a separator string
+intercalateFailure :: (Monoid (Element e), IsSequence e)
+                    => Element e
+                    -> Validation e a
+                    -> Either (Element e) a
+intercalateFailure sep = first (intercalate sep) . validationToEither
 
 -- | Mark a field invalid
 invalidWhen :: Bool -> e -> Validation [e] a

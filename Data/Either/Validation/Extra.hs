@@ -1,5 +1,6 @@
 module Data.Either.Validation.Extra
   ( validate
+  , intercalateFailure
   , invalidWhen
   , validIfEmpty
   , failWithHead
@@ -23,6 +24,13 @@ validate msg = maybe (Failure [msg]) Success
 
 -- TODO: Tag the Nothing value of a MaybeT
 -- validateT :: Monad m => a -> MaybeT m b -> ValidationT a m b
+
+-- | Reformat a validation failure to produce an Either
+intercalateFailure :: (Monoid (Element txt), IsSequence txt)
+                    => Element txt
+                    -> Validation txt a
+                    -> Either (Element txt) a
+intercalateFailure = left intercalate . validationToEither
 
 -- | Mark a field invalid
 invalidWhen :: Bool -> e -> Validation [e] a

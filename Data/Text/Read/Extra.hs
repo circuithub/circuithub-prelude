@@ -1,5 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
-module Data.Text.Read
+module Data.Text.Read.Extra
   ( readNote
   , readNoteWith
   , readNoteExpect
@@ -11,15 +11,15 @@ module Data.Text.Read
 import ClassyPrelude (readMay, asTypeOf)
 import Data.Either (Either)
 import Data.Either.Validation (Validation, eitherToValidation)
-import Data.MonoTraversable (MonoFoldable, Element, otoList)
+import Data.MonoTraversable (MonoFoldable, Element)
 import Data.Sequences (IsSequence)
 import Control.Error.Util (note)
 import Text.Read (Read)
-import Data.Function (($), (.))
+import Data.Function ((.))
 import Data.Char (Char)
 import Data.Bifunctor (first)
 import Data.Monoid (Monoid, (<>))
-import GHC.Exts (IsString, fromList, fromString)
+import GHC.Exts (IsString, fromString)
 
 -- | A read that either fails or succeeds in 'Either'
 -- >>> readNote "Expected Int" "x"

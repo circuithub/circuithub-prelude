@@ -27,7 +27,7 @@ library
                      Data.Text.Clean
                      Data.Text.Sequences
                      Data.Text.Convert
-                     Data.Text.Read
+                     Data.Text.Read.Extra
                      Data.ByteString.Extra
                      Data.Maybe.Extra
                      Data.Tuple.Extra

@@ -15,7 +15,7 @@ import Data.Bifunctor.Extra         as CHPrelude ( mapBoth
                                                  )
 import Data.Traversable             as CHPrelude ( sequence
                                                  )
-import Data.Text.Read               as CHPrelude ( readValidate
+import Data.Text.Read.Extra         as CHPrelude ( readValidate
                                                  , readValidateWith
                                                  , readValidateExpect
                                                  , readNote

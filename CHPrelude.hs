@@ -15,8 +15,12 @@ import Data.Bifunctor.Extra         as CHPrelude ( mapBoth
                                                  )
 import Data.Traversable             as CHPrelude ( sequence
                                                  )
-import Data.Text.Read               as CHPrelude ( readValid
-                                                 , readEither
+import Data.Text.Read               as CHPrelude ( readValidate
+                                                 , readValidateWith
+                                                 , readValidateExpect
+                                                 , readNote
+                                                 , readNoteWith
+                                                 , readNoteExpect
                                                  )
 import Text.Read                    as CHPrelude ( lex
                                                  , readsPrec
@@ -28,7 +32,7 @@ import Control.Monad                as CHPrelude ( zipWithM
 import Data.Either.Validation.Extra as CHPrelude ( validate
                                                  )
 import Control.Error.Safe           as CHPrelude hiding ( tryJust
-                                                        , readErr   -- Use readEither/readValid instead
+                                                        , readErr   -- Use readNote*/readValidate* instead
                                                         )
 import Control.Error.Util           as CHPrelude ( (?:)
                                                  )

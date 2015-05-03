@@ -55,7 +55,7 @@ zipExact3Note :: String -> [a] -> [b] -> [c] -> [(a,b,c)]
 zipExact3Note note = zipWithExact3Note note (,,)
 
 zipExact4Note :: String -> [a] -> [b] -> [c] -> [d] -> [(a,b,c,d)]
-zipExact4Note note =  zipWithExact4Note note (,,,)
+zipExact4Note note = zipWithExact4Note note (,,,)
 
 zipExact5Note :: String -> [a] -> [b] -> [c] -> [d] -> [e] -> [(a,b,c,d,e)]
-zipExact5Note note =  zipWithExact5Note note (,,,,)
+zipExact5Note note = zipWithExact5Note note (,,,,)

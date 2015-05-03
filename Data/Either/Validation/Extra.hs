@@ -7,7 +7,10 @@ module Data.Either.Validation.Extra
   , failWithHead
   ) where
 
-{- TODO: Ask on stackoverflow why Validation is not a monad?
+{- See also
+* http://www.reddit.com/r/haskell/comments/34n8gq/smarter_validation/
+* http://hackage.haskell.org/package/transformers-0.4.3.0/docs/Control-Applicative-Lift.html
+* http://www.reddit.com/r/haskell/comments/3407pb/implementing_a_new_style_of_data_validation/
 -}
 
 import Data.Bool (Bool)

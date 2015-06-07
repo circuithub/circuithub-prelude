@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
 module Data.Either.Validation.Extra
   ( validate
   , intercalateFailure
@@ -15,6 +16,7 @@ module Data.Either.Validation.Extra
 import Data.Bool (Bool)
 import Data.Eq (Eq, (==))
 import Data.Maybe (Maybe, maybe)
+import Data.Char (Char)
 import Data.Either (Either (..))
 import Data.Bifunctor (first)
 import Data.Text (Text, unpack)
@@ -26,6 +28,8 @@ import Data.Sequences (IsSequence)
 import Data.MonoTraversable (Element)
 import ClassyPrelude (intercalate)
 import Data.Function ((.))
+-- import Control.Monad.Error.Class (MonadError) -- TODO
+import GHC.Exts (IsList, Item, toList)
 
 -- | Like note from Control.Error.Util except for 'Validation' instead of 'Either'
 --   I.e. tag the 'Nothing' value of a 'Maybe'.
@@ -51,7 +55,10 @@ invalidWhen cond msg =
   else mempty
 
 -- | Fail in a monad with the first validation failure
-failWithHead :: Monad m => Validation [Text] a -> m a
+-- TODO: failWithHead :: (IsString e, MonadError e m) => Validation [e] a -> m a
+--       failWithHead (Failure (e:_)) = mfail (toString e)
+--       failWithHead (Failure _    ) = mfail ("Unknown failure (failWithHead)")
+failWithHead :: (Monad m, IsList e, Item e ~ Char) => Validation [e] a -> m a
 failWithHead (Success x    ) = return x
-failWithHead (Failure (e:_)) = fail (unpack e)
+failWithHead (Failure (e:_)) = fail (toList e)
 failWithHead (Failure _    ) = fail "Unknown failure (failWithHead)"

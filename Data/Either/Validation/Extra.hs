@@ -3,7 +3,6 @@ module Data.Either.Validation.Extra
   ( validate
   , intercalateFailure
   , invalidWhen
-  , validIfEmpty
   , failWithHead
   ) where
 
@@ -50,11 +49,6 @@ invalidWhen cond msg =
   if cond
   then Failure [msg]
   else mempty
-
--- | Turn a validation with empty failures into a success
-validIfEmpty :: (Eq e, Monoid e) => a -> Validation e a -> Validation e a
-validIfEmpty x v@(Failure e) = if e == mempty then Success x else v
-validIfEmpty _ v             = v
 
 -- | Fail in a monad with the first validation failure
 failWithHead :: Monad m => Validation [Text] a -> m a

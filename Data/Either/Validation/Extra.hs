@@ -4,6 +4,10 @@ module Data.Either.Validation.Extra
   , intercalateFailure
   , invalidWhen
   , failWithHead
+  , successMay
+  , failureMay
+  , successes
+  , failures
   ) where
 
 {- See also
@@ -13,8 +17,8 @@ module Data.Either.Validation.Extra
 -}
 
 import Data.Bool (Bool)
-import Data.Eq (Eq, (==))
-import Data.Maybe (Maybe, maybe)
+import Data.Maybe (Maybe (..), maybe, catMaybes)
+import Data.List (map)
 import Data.Either (Either (..))
 import Data.Bifunctor (first)
 import Data.Text (Text, unpack)
@@ -55,3 +59,21 @@ failWithHead :: Monad m => Validation [Text] a -> m a
 failWithHead (Success x    ) = return x
 failWithHead (Failure (e:_)) = fail (unpack e)
 failWithHead (Failure _    ) = fail "Unknown failure (failWithHead)"
+
+-- | Convert a @Success a@ into a @Just a@
+successMay :: Validation e a -> Maybe a
+successMay (Success x) = Just x
+successMay (Failure _) = Nothing
+
+-- | Convert a @Failure e@ into a @Just e@
+failureMay :: Validation e a -> Maybe e
+failureMay (Success _) = Nothing
+failureMay (Failure x) = Just x
+
+-- | Convert a list of 'Validation' into a list of successes
+successes :: [Validation e a] -> [a]
+successes = catMaybes . map successMay
+
+-- | Convert a list of 'Validation' into a list of failures
+failures :: [Validation e a] -> [e]
+failures = catMaybes . map failureMay

@@ -1,5 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
-module Data.List.Extra 
+module Data.List.Extra
   ( keyNub
   , ordNubOn
   , ordNubIndex
@@ -13,6 +13,7 @@ module Data.List.Extra
   , hashLookupWithDebug
   , lookupFromNothing
   , lookupFromNothings
+  , groupOn
   , ordGroupAllOn
   , ordGroupAllByOn
   , minIndexMay
@@ -80,7 +81,7 @@ ordNubOn f = ordNubBy f (\x y -> f x == f y)
 --                                      else x : go (HS.insert x s) xs
 
 -- | A version of nub which returns an additional index into the original configuration
---   TODO: In theory we could generalize Integral to Enum here, but unfortunately this would also require 
+--   TODO: In theory we could generalize Integral to Enum here, but unfortunately this would also require
 --         Bounded which is not always desirable
 --
 -- >>> ordNubIndexBy (`div` 2) [0,1,4,3,1,2,0,8,1,8,4]
@@ -197,6 +198,15 @@ lookupFromNothing _ (x, Just y)  = (x, y)
 -- | Look up values to fill the holes in the right-hand sides of a list of pairs (using the left-hand side as the key to the supplied lookup function).
 lookupFromNothings :: (a -> b) -> [(a, Maybe b)] -> [(a, b)]
 lookupFromNothings = map . lookupFromNothing
+
+-- | Group elements using a conversion instead a comparison function
+--
+-- >>> groupOn id [1,1,2,2,3,4,5,4,3,2,1,11,22,11,22,11,22,11] :: [[Int]]
+-- [[1,1],[2,2],[3],[4],[5],[4],[3],[2],[1],[11],[22],[11],[22],[11],[22],[11]]
+--
+
+groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
+groupOn f = groupBy (\x y -> f x == f y)
 
 -- | An O(n log n) implementation of 'groupAllOn' that returns an ordinal for each element in order
 -- See https://github.com/snoyberg/mono-traversable/issues/36

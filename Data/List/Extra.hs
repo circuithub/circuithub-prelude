@@ -16,6 +16,10 @@ module Data.List.Extra
   , groupOn
   , ordGroupAllOn
   , ordGroupAllByOn
+  , zipWithOn
+  , zipOn
+  , ordZipWithAllOn
+  , ordZipAllOn
   , minIndexMay
   , maxIndexMay
   , filterFirstJusts
@@ -232,6 +236,54 @@ ordGroupAllByOn :: Ord b => (b -> b -> Bool) -> (a -> b) -> [a] -> [[a]]
 ordGroupAllByOn dist f = let cmp = comparing snd
                              eq  = dist `on` snd
                          in (map . map) fst . groupBy eq . sortBy cmp . map (\x -> (x, f x))
+
+-- | Zip two list using the supplied pairing function to ensure that the left-hand side matches the right-hand side
+--   TODO: See also http://hackage.haskell.org/package/these for an alternative idea
+--
+-- >>> zipWithOn (\x y -> x * 10 == y) (+) [1,2,3,4,6] ([10,20,40,50,60] :: [Int])
+-- [Right 11, Right 22, Left (Left 3), Right 44, Left (Left 6), Left (Right 50), Left (Right 60)]
+--
+zipWithOn :: (a -> b -> Bool) -> (a -> b -> r) -> [a] -> [b] -> [Either (Either a b) r]
+zipWithOn _    _ xs     []          = map (Left . Left) xs
+zipWithOn _    _ []     ys          = map (Left . Right) ys
+zipWithOn comp f (x:xs') ys@(y:ys') = if x `comp` y
+                                      then Right (f x y) : zipWithOn comp f xs' ys'
+                                      else (Left . Left) x : zipWithOn comp f xs' ys
+
+-- | Zip two list using the supplied pairing function to ensure that the left-hand side matches the right-hand side
+--   TODO: See also http://hackage.haskell.org/package/these for an alternative idea
+--
+-- >>> zipOn (\x y -> x * 10 == y) [1,2,3,4,6] ([10,20,40,50,60] :: [Int])
+-- [Right (1,10), Right (2,20), Left (Left 3), Right (4,40), Left (Left 6), Left (Right 50), Left (Right 60)]
+--
+zipOn :: (a -> b -> Bool) -> [a] -> [b] -> [Either (Either a b) (a,b)]
+zipOn comp = zipWithOn comp (,)
+
+-- | Zip two list using the supplied pairing function. The lists need not be aligned, it will be automatically sorted.
+--   TODO: See if it's possible to remove @Ord a@ and @Ord b@ constraints in future.
+--
+-- >>> ordZipWithAllOn (\x y -> (x * 10) `compare` y) (+) [1,2,3,4,6] ([10,20,40,50,60] :: [Int])
+-- [Right 11, Right 22, Left (Left 3), Right 44, Left (Right 50), Right 66]
+--
+ordZipWithAllOn :: (Ord a, Ord b) => (a -> b -> Ordering) -> (a -> b -> r) -> [a] -> [b] -> [Either (Either a b) r]
+ordZipWithAllOn comp f as bs = ordZipAllOn' (sort as) (sort bs)
+  where
+    ordZipAllOn' xs     []             = map (Left . Left) xs
+    ordZipAllOn' []     ys             = map (Left . Right) ys
+    ordZipAllOn' xs@(x:xs') ys@(y:ys') =
+      case x `comp` y of
+        EQ -> Right (x `f` y) : ordZipAllOn' xs' ys'
+        LT -> Left (Left x) : ordZipAllOn' xs' ys
+        GT -> Left (Right y) : ordZipAllOn' xs ys'
+
+-- | Zip two list using the supplied pairing function. The lists need not be aligned, it will be automatically sorted.
+--   TODO: See if it's possible to remove @Ord a@ and @Ord b@ constraints in future.
+--
+-- >>> ordZipAllOn (\x y -> (x * 10) `compare` y) [1,2,3,4,6] ([10,20,40,50,60] :: [Int])
+-- [Right (1,10), Right (2,20), Left (Left 3), Right (4,40), Left (Right 50), Right (6, 60)]
+--
+ordZipAllOn :: (Ord a, Ord b) => (a -> b -> Ordering) -> [a] -> [b] -> [Either (Either a b) (a,b)]
+ordZipAllOn comp = ordZipWithAllOn comp (,)
 
 -- | Find the index of the minimum element
 minIndexMay :: Ord a => [a] -> Maybe Int

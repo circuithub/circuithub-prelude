@@ -48,11 +48,11 @@ intercalateFailure :: (Monoid (Element e), IsSequence e)
 intercalateFailure sep = first (intercalate sep) . validationToEither
 
 -- | Mark a field invalid
-invalidWhen :: Bool -> e -> Validation [e] a
+invalidWhen :: Bool -> e -> Validation [e] ()
 invalidWhen cond msg =
   if cond
   then Failure [msg]
-  else mempty
+  else Success ()
 
 -- | Fail in a monad with the first validation failure
 failWithHead :: Monad m => Validation [Text] a -> m a

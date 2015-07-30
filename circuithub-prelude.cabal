@@ -1,5 +1,5 @@
 name:              circuithub-prelude
-version:           0.0.18
+version:           0.0.19
 synopsis:          CircuitHub's Prelude that builds on top of the ClassyPrelude
 description:       This package is mostly intended for CircuitHub's internal development
                    and is in active development. Therefore the api is not guaranteed to
@@ -28,7 +28,6 @@ library
                      Data.Text.Sequences
                      Data.Text.Convert
                      Data.Text.Read.Extra
-                     Data.ByteString.Extra
                      Data.Maybe.Extra
                      Data.Tuple.Extra
                      Data.List.Extra

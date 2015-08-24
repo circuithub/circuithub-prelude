@@ -18,6 +18,7 @@ module Data.List.Extra
   , ordGroupAllByOn
   , zipWithOn
   , zipOn
+  , zipMaybe
   , ordZipWithAllOn
   , ordZipAllOn
   , minIndexMay
@@ -284,6 +285,13 @@ ordZipWithAllOn comp f as bs = ordZipAllOn' (sort as) (sort bs)
 --
 ordZipAllOn :: (Ord a, Ord b) => (a -> b -> Ordering) -> [a] -> [b] -> [Either (Either a b) (a,b)]
 ordZipAllOn comp = ordZipWithAllOn comp (,)
+
+-- | Zip 2 lists together, ensuring the length of the resulting list is equal
+--   to the longest of the two by padding with Nothing
+zipMaybe :: [a] -> [b] -> [(Maybe a, Maybe b)]
+zipMaybe [] _bs = map (\x -> (Nothing, Just x)) _bs
+zipMaybe _as [] = map (\x -> (Just x, Nothing)) _as
+zipMaybe (a:as) (b:bs) = (Just a, Just b) : zipMaybe as bs
 
 -- | Find the index of the minimum element
 minIndexMay :: Ord a => [a] -> Maybe Int

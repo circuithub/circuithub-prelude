@@ -30,21 +30,21 @@ module Data.List.Extra
   , filterSecondNothings
   ) where
 
-import Prelude
-import ClassyPrelude (ordNub, ordNubBy)
-import Safe
-import Data.Bifunctor
-import Data.Ord (comparing)
+import           ClassyPrelude       (ordNub, ordNubBy)
+import           Data.Bifunctor
+import           Data.Ord            (comparing)
+import           Prelude
+import           Safe
 -- import qualified Data.Set            as S
 -- import qualified Data.HashSet        as HS
-import qualified Data.IntMap.Strict  as IM
-import qualified Data.Map.Strict     as M
+import           Data.ComparableKey  (OrdByKey (..), OrdKeyed (..))
+import           Data.Function       (on)
+import           Data.Hashable
 import qualified Data.HashMap.Strict as HM
-import Data.ComparableKey (OrdByKey (..), OrdKeyed (..))
-import Data.Hashable
-import Data.List
-import Data.Maybe
-import Data.Function (on)
+import qualified Data.IntMap.Strict  as IM
+import           Data.List
+import qualified Data.Map.Strict     as M
+import           Data.Maybe
 -- import qualified Data.List.NonEmpty as LN
 
 -- | A faster O(n log n) nub function that works on Ord elements (from https://github.com/nh2/haskell-ordnub#dont-use-nub)
@@ -288,6 +288,7 @@ ordZipAllOn comp = ordZipWithAllOn comp (,)
 
 -- | Zip 2 lists together, ensuring the length of the resulting list is equal
 --   to the longest of the two by padding with Nothing
+-- TODO: see also http://hackage.haskell.org/package/these-0.3/docs/Data-Align.html and https://www.reddit.com/r/haskell/comments/37qwr0/what_are_the_inconsistencies_and_inconveniences/crpqqwt
 zipMaybe :: [a] -> [b] -> [(Maybe a, Maybe b)]
 zipMaybe [] _bs = map (\x -> (Nothing, Just x)) _bs
 zipMaybe _as [] = map (\x -> (Just x, Nothing)) _as

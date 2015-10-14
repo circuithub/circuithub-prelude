@@ -28,7 +28,7 @@ import Data.Either.Validation
 -- import Data.Monoid (Monoid)
 import Data.Sequences (IsSequence)
 import Data.MonoTraversable (Element)
-import ClassyPrelude (intercalate)
+import ClassyPrelude (intercalate, toList)
 import Data.Function ((.))
 
 -- | Like note from Control.Error.Util except for 'Validation' instead of 'Either'
@@ -41,11 +41,11 @@ validate msg = maybe (Failure [msg]) Success
 
 -- | Reformat a validation failure to produce an Either
 --   The errors are concatenated by intercalating a separator string
-intercalateFailure :: (Monoid (Element e), IsSequence e)
+intercalateFailure :: (IsSequence (Element e), IsSequence e)
                     => Element e
                     -> Validation e a
                     -> Either (Element e) a
-intercalateFailure sep = first (intercalate sep) . validationToEither
+intercalateFailure sep = first (intercalate sep . toList) . validationToEither
 
 -- | Mark a field invalid
 invalidWhen :: Bool -> e -> Validation [e] ()

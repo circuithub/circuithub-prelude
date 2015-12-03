@@ -71,5 +71,5 @@ library
                  , either                        >= 4.3.0.1
                  , errors                        >= 1.4.7         && < 2.1
                  , split                         >= 0.2.2         && < 0.3
-                 , vector                        >= 0.10.9.1      && < 0.11
+                 , vector                        >= 0.10.9.1      && < 0.12
                  , mono-traversable              >= 0.6.1

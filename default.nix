@@ -5,7 +5,7 @@
 }:
 mkDerivation {
   pname = "circuithub-prelude";
-  version = "0.0.22";
+  version = "0.0.26";
   src = ./.;
   buildDepends = [
     aeson aeson-pretty base bifunctors bytestring classy-prelude

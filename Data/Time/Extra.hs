@@ -40,7 +40,7 @@ addBusinessDays holidays = go
   where
     isHoliday day = member day holidays
     go days day
-      | days <= 0                      = day
       | isWeekend day || isHoliday day = go days (addDaysInt 1 day)
+      | days <= 0                      = day
       | otherwise                      = go (days - 1) (addDaysInt 1 day)
 

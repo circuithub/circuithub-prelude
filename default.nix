@@ -5,9 +5,9 @@
 }:
 mkDerivation {
   pname = "circuithub-prelude";
-  version = "0.0.26";
+  version = "0.0.27";
   src = ./.;
-  buildDepends = [
+  libraryHaskellDepends = [
     aeson aeson-pretty base bifunctors bytestring classy-prelude
     comparable-key containers either errors hashable mono-traversable
     safe semigroups split text time unordered-containers utf8-string

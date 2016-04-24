@@ -35,6 +35,8 @@ mkDerivation {
     chmod +w -R dist/
     touch dist/MD5SUMS
 
+    cat ${dist}/MD5SUMS
+
     # Touch any files whose MD5SUM has changed since the last build
     join $dist/MD5SUMS dist/MD5SUMS -v 1 | cut -d' ' -f 2 | while read filename; do
       echo "$filename" has changed

@@ -37,3 +37,4 @@ import Control.Error.Safe           as CHPrelude hiding ( tryJust
                                                         )
 import Control.Error.Util           as CHPrelude ( (?:)
                                                  )
+import GHC.Generics as CHPrelude

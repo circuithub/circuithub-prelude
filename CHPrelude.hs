@@ -7,7 +7,7 @@ import ClassyPrelude                as CHPrelude hiding ( head                  
                                                         , first, second
                                                         , elem, notElem                 -- Deprecated (replaced by oelem, onotElem)
                                                         , forM, forM_                   -- Replaced by more general for and for_
-                                                        , for_                          -- Temporarily hide for_ for forward-compatibility with classy-prelude >= 0.12.6
+                                                        , for_, delete, deleteBy        -- Hide for forward compatibility with more recent versions of classy-prelude
                                                         )
 import Data.Foldable                as CHPrelude ( for_
                                                  )

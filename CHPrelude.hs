@@ -9,6 +9,12 @@ import ClassyPrelude                as CHPrelude hiding ( head                  
                                                         , forM, forM_                   -- Replaced by more general for and for_
                                                         , for_, delete, deleteBy        -- Hide for forward compatibility with more recent versions of classy-prelude
                                                         , async
+                                                        , try
+                                                        , mapConcurrently
+                                                        , catch
+                                                        , Handler
+                                                        , throwIO
+                                                        , toNullable
                                                         )
 import Data.Foldable                as CHPrelude ( for_
                                                  )

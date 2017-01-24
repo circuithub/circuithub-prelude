@@ -1,7 +1,8 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 module Data.Time.Extra where
 
 import ClassyPrelude hiding (member)
-import Data.Set
+import Data.Set hiding (map)
 import Data.Time
 import Data.Time.Calendar.WeekDate
 
@@ -44,3 +45,10 @@ addBusinessDays holidays = go
       | days <= 0                      = day
       | otherwise                      = go (days - 1) (addDaysInt 1 day)
 
+countWeekDays :: Day -> Day -> Int
+countWeekDays now end =
+  let days = [ d | d <- [now..end]
+                 , not (isWeekend d)
+             ]
+
+  in (ClassyPrelude.length days) - 1
